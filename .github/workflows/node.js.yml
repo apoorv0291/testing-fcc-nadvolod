@@ -30,7 +30,7 @@ jobs:
       run:  |
         cd fcc-testing-nadvolod
         npm ci
-    - name: Install dependenciess    
+    - name: BUILD PROD APP     
       run:  |
         cd fcc-testing-nadvolod
         npm run build
