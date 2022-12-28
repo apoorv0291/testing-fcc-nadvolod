@@ -4,45 +4,44 @@
 name: Node.js CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    push:
+        branches: ['main']
+    pull_request:
+        branches: ['main']
 
 jobs:
-  build:
+    build:
+        runs-on: ubuntu-latest
 
-    runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x, 16.x, 18.x]
+                # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        steps:
+            - uses: actions/checkout@v3
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - name: Install dependenciess
+              run: |
+                  # cd fcc-testing-nadvolod
+                  npm ci
+            - name: BUILD PROD APP
+              run: |
+                  # cd fcc-testing-nadvolod
+                  npm run build
+            - name: Run COMPONENT TEST
+              run: |
+                  # cd fcc-testing-nadvolod
+                  npm run test
+            - name: Start the first testing CI enabled app
+              run: |
+                  cd my-app
+                  npm start &
+                  npx wait-on --timeout 6000
 
-    steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - name: Install dependenciess    
-      run:  |
-        cd fcc-testing-nadvolod
-        npm ci
-    - name: BUILD PROD APP     
-      run:  |
-        cd fcc-testing-nadvolod
-        npm run build
-    - name: Run COMPONENT TEST 
-      run:  |
-        cd fcc-testing-nadvolod
-        npm run test
-    - name: Start the first testing CI enabled app
-      run:  |
-        cd my-app
-        npm start &
-        npx wait-on --timeout 6000
-    
-    - run: npm run build --if-present
-    - run: npm test
+            - run: npm run build --if-present
+            - run: npm test
