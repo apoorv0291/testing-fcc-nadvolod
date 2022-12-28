@@ -39,7 +39,7 @@ jobs:
                   npm run test
             - name: Start the first testing CI enabled app
               run: |
-                  cd my-app
+                  # cd  fcc-testing-nadvolod
                   npm start &
                   npx wait-on --timeout 6000
 
